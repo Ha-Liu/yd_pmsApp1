@@ -41,6 +41,12 @@ namespace yd_pmsApp1.ViewModels.Windows
         {
             new NavigationViewItem()
             {
+                Content = "User",
+                Icon = new SymbolIcon { Symbol = SymbolRegular.Person24 },
+                //TargetPageType = typeof(Views.Controls.UserInfoControl)
+            },
+            new NavigationViewItem()
+            {
                 Content = "Settings",
                 Icon = new SymbolIcon { Symbol = SymbolRegular.Settings24 },
                 TargetPageType = typeof(Views.Pages.SettingsPage)

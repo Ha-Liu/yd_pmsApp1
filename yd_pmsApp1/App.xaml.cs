@@ -11,6 +11,7 @@ using yd_pmsApp1.ViewModels.Pages;
 using yd_pmsApp1.ViewModels.Windows;
 using yd_pmsApp1.Views.Pages;
 using yd_pmsApp1.Views.Windows;
+//using yd_pmsApp1.Views.Controls;
 
 namespace yd_pmsApp1
 {
@@ -55,6 +56,10 @@ namespace yd_pmsApp1
                 services.AddSingleton<DataViewModel>();
                 services.AddSingleton<SettingsPage>();
                 services.AddSingleton<SettingsViewModel>();
+
+                //注册修改密码窗口
+                services.AddSingleton<ChangePasswordWindow>();
+
             }).Build();
 
         /// <summary>

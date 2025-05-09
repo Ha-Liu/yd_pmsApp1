@@ -25,6 +25,16 @@ namespace yd_pmsApp1.Views.Windows
         public LoginWindow()
         {
             InitializeComponent();
+            // 注册窗口关闭事件
+            Closed += LoginWindow_Closed;
+        }
+        private void LoginWindow_Closed(object sender, EventArgs e)
+        {
+            // 如果主窗口没有显示，则退出应用程序
+            if (Application.Current.Windows.OfType<MainWindow>().All(w => !w.IsVisible))
+            {
+                Application.Current.Shutdown();
+            }
         }
         private async void LoginButton_Click(object sender, RoutedEventArgs e)
         {

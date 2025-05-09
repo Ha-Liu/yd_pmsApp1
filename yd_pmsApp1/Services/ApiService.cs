@@ -73,6 +73,67 @@ public static class ApiService
         return responseBody;
     }
 
+    public static async Task<string> LogoutAsync(string userId, string session)
+    {
+        var requestData = new
+        {
+            REQUEST = new
+            {
+                HDR = new
+                {
+                    SERVICE_ID = "10000",
+                    OTYPE = 2
+                },
+                DATA = new
+                {
+                    USER_ID = userId,
+                    SESSION = session
+                }
+            }
+        };
+
+        string jsonContent = JsonConvert.SerializeObject(requestData);
+        var httpContent = new StringContent(jsonContent, Encoding.UTF8, "application/json");
+
+        HttpResponseMessage response = await client.PostAsync("http://120.26.136.102/mms_sm_req", httpContent);
+        response.EnsureSuccessStatusCode();
+
+        return await response.Content.ReadAsStringAsync();
+    }
+
+    public static async Task<string> ChangePasswordAsync(string userId, string session, string oldPassword, string newPassword)
+    {
+        string encryptedOldPassword = AESEncryption.Encrypt(oldPassword);
+        string encryptedNewPassword = AESEncryption.Encrypt(newPassword);
+
+        var requestData = new
+        {
+            REQUEST = new
+            {
+                HDR = new
+                {
+                    SERVICE_ID = "10000",
+                    OTYPE = 3
+                },
+                DATA = new
+                {
+                    USER_ID = userId,
+                    SESSION = session,
+                    OLD_PASSWORD = encryptedOldPassword,
+                    NEW_PASSWORD = encryptedNewPassword
+                }
+            }
+        };
+
+        string jsonContent = JsonConvert.SerializeObject(requestData);
+        var httpContent = new StringContent(jsonContent, Encoding.UTF8, "application/json");
+
+        HttpResponseMessage response = await client.PostAsync("http://120.26.136.102/mms_sm_req", httpContent);
+        response.EnsureSuccessStatusCode();
+
+        return await response.Content.ReadAsStringAsync();
+    }
+
     // 辅助方法：格式化JSON
     private static string FormatJson(string json)
     {
