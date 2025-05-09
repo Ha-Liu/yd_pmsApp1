@@ -1,0 +1,78 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Documents;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Windows.Shapes;
+using Microsoft.Extensions.DependencyInjection;
+using Newtonsoft.Json.Linq;
+using Wpf.Ui;
+
+namespace yd_pmsApp1.Views.Windows
+{
+    /// <summary>
+    /// LoginWindow.xaml 的交互逻辑
+    /// </summary>
+    public partial class LoginWindow : Window
+    {
+        public LoginWindow()
+        {
+            InitializeComponent();
+        }
+        private async void LoginButton_Click(object sender, RoutedEventArgs e)
+        {
+            string username = UsernameTextBox.Text;
+            string password = PasswordBox.Password;
+
+            if (string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(password))
+            {
+                MessageBox.Show("用户名和密码不能为空。", "提示", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            try
+            {
+                // 调用 API 验证登录
+                string response = await ApiService.LoginAsync(username, password);
+
+                // 解析响应数据（假设返回 JSON 格式）
+                var responseJson = JObject.Parse(response);
+                string? status = responseJson["ANSWER"]?["HDR"]?["CODE"]?.ToString();
+
+                if (status == "0")
+                {
+                    // 登录成功，打开主窗口
+                    var mainWindow = App.Services.GetRequiredService<INavigationWindow>() as MainWindow; // 正确：从容器中获取
+                    mainWindow.ShowWindow();
+                    this.Close();
+                }
+                else
+                {
+                    // 登录失败，显示错误信息
+                    string errorMessage = responseJson["RESPONSE"]?["HDR"]?["ERROR_MSG"]?.ToString() ?? "登录失败";
+                    MessageBox.Show(errorMessage, "登录失败", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
+            catch (Exception ex)
+            {
+                // 捕获异常并显示错误信息
+                MessageBox.Show($"登录时发生错误：{ex.Message}", "错误", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+        private void PasswordBox_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                // 模拟点击登录按钮
+                LoginButton_Click(LoginButton, new RoutedEventArgs());
+            }
+        }
+    }
+}
