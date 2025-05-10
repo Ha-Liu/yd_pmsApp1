@@ -52,22 +52,44 @@ namespace yd_pmsApp1.Views.Windows
                 // 调用 API 验证登录
                 string response = await ApiService.LoginAsync(username, password);
 
-                // 解析响应数据（假设返回 JSON 格式）
+                // 解析响应数据
                 var responseJson = JObject.Parse(response);
-                string? status = responseJson["ANSWER"]?["HDR"]?["CODE"]?.ToString();
+                string? code = responseJson["ANSWER"]?["HDR"]?["CODE"]?.ToString();
 
-                if (status == "0")
+                if (code == "0")
                 {
-                    // 登录成功，打开主窗口
-                    var mainWindow = App.Services.GetRequiredService<INavigationWindow>() as MainWindow; // 正确：从容器中获取
-                    mainWindow.ShowWindow();
-                    this.Close();
+                    // 获取用户数据
+                    var userData = responseJson["ANSWER"]?["DATA"]?.FirstOrDefault();
+                    if (userData != null)
+                    {
+                        // 创建用户信息对象
+                        var userInfo = new Models.UserInfo
+                        {
+                            UserId = userData["USER_ID"]?.ToString(),
+                            Session = userData["SESSION"]?.ToString(),
+                            Account = userData["ACCOUNT"]?.ToString(),
+                            LoginAccount = username  // 保存登录时输入的账号
+                        };
+
+                        // 获取 UserService 并存储用户信息
+                        var userService = App.Services.GetService<Services.UserService>();
+                        userService?.SetCurrentUser(userInfo);
+
+                        // 登录成功，打开主窗口
+                        var mainWindow = App.Services.GetRequiredService<INavigationWindow>() as MainWindow;
+                        mainWindow.ShowWindow();
+                        this.Close();
+                    }
+                    else
+                    {
+                        MessageBox.Show("获取用户信息失败", "登录失败", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
                 }
                 else
                 {
                     // 登录失败，显示错误信息
-                    string errorMessage = responseJson["RESPONSE"]?["HDR"]?["ERROR_MSG"]?.ToString() ?? "登录失败";
-                    MessageBox.Show(errorMessage, "登录失败", MessageBoxButton.OK, MessageBoxImage.Error);
+                    string text = responseJson["ANSWER"]?["HDR"]?["TEXT"]?.ToString() ?? "登录失败";
+                    MessageBox.Show(text, "登录失败", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
             catch (Exception ex)

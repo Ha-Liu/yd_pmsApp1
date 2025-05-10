@@ -41,13 +41,13 @@ namespace yd_pmsApp1.ViewModels.Windows
         {
             new NavigationViewItem()
             {
-                Content = "User",
+                Content = "用户",
                 Icon = new SymbolIcon { Symbol = SymbolRegular.Person24 },
-                //TargetPageType = typeof(Views.Controls.UserInfoControl)
+                TargetPageType = typeof(Views.Pages.UserInfoPage)
             },
             new NavigationViewItem()
             {
-                Content = "Settings",
+                Content = "设置",
                 Icon = new SymbolIcon { Symbol = SymbolRegular.Settings24 },
                 TargetPageType = typeof(Views.Pages.SettingsPage)
             }

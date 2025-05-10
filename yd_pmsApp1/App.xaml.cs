@@ -33,6 +33,7 @@ namespace yd_pmsApp1
                 services.AddNavigationViewPageProvider();
 
                 services.AddHostedService<ApplicationHostService>();
+                services.AddSingleton<UserService>();
 
                 // Theme manipulation
                 services.AddSingleton<IThemeService, ThemeService>();
@@ -56,6 +57,8 @@ namespace yd_pmsApp1
                 services.AddSingleton<DataViewModel>();
                 services.AddSingleton<SettingsPage>();
                 services.AddSingleton<SettingsViewModel>();
+                services.AddSingleton<UserInfoPage>();
+                services.AddSingleton<UserInfoViewModel>();
 
                 //注册修改密码窗口
                 services.AddSingleton<ChangePasswordWindow>();
