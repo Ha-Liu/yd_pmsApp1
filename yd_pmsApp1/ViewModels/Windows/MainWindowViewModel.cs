@@ -29,6 +29,13 @@ namespace yd_pmsApp1.ViewModels.Windows
                 Content = "Data",
                 Icon = new SymbolIcon { Symbol = SymbolRegular.DataHistogram24 },
                 TargetPageType = typeof(Views.Pages.DataPage)
+            },
+            //添加一个打印测试的页面
+            new NavigationViewItem()
+            {
+                Content = "打印测试",
+                Icon = new SymbolIcon { Symbol = SymbolRegular.Print24 },
+                TargetPageType = typeof(Views.Pages.PrintTestPage)
             }
         };
 

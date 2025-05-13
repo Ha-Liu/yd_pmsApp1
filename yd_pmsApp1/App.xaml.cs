@@ -59,6 +59,8 @@ namespace yd_pmsApp1
                 services.AddSingleton<SettingsViewModel>();
                 services.AddSingleton<UserInfoPage>();
                 services.AddSingleton<UserInfoViewModel>();
+                services.AddSingleton<PrintTestPage>();
+                services.AddSingleton<PrintTestViewModel>();
 
                 //注册修改密码窗口
                 services.AddSingleton<ChangePasswordWindow>();
